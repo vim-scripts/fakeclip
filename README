@@ -1,0 +1,33 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=2098
+
+*fakeclip* is a Vim plugin to provide a pseudo |clipboard| register for
+several versions of Vim without |+clipboard| support, especially for non-GUI
+version of Vim on the following platforms:
+
+- Cygwin
+- Mac OS X
+- X Window System (by xclip <http://sourceforge.net/projects/xclip/&gt;)
+
+
+fakeclip also provides a pseudo register to access a "paste buffer" if one of
+the following applications is available:
+
+- GNU screen
+- tmux
+
+
+FAQ: If you can't copy/paste multibyte characters with the clipboard
+     on Mac OS X, see |fakeclip-multibyte-on-mac|.
+
+Note for Mac OS users: Though Vim supports clipboard for the console version
+since version 7.3, fakeclip is still useful to access a "paste buffer".
+
+
+Requirements:
+- Vim 7.0 or later
+
+Latest version:
+http://github.com/kana/vim-fakeclip
+
+Document in HTML format:
+http://kana.github.com/config/vim/fakeclip.html

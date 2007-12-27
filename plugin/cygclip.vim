@@ -1,8 +1,8 @@
 " cygclip - pseude clipboard register for non-GUI version of Vim on Cygwin
-" Version: 0.0
+" Version: 0.1
 " Copyright: Copyright (C) 2007 kana <http://nicht.s8.xrea.com/>
 " License: MIT license (see <http://www.opensource.org/licenses/mit-license>)
-" $Id: /local/svn-repos/config/trunk/vim/dot.vim/plugin/cygclip.vim 2 2007-09-30T17:04:07.177174Z svm  $  "{{{1
+" $Id: /local/svn-repos/config/trunk/vim/dot.vim/plugin/cygclip.vim 1231 2007-12-27T14:18:15.592278Z kana  $  "{{{1
 
 if exists('g:loaded_cygclip') && has('clipboard') || !has('win32unix')
   finish
@@ -63,6 +63,11 @@ function! Cygclip_DefaultKeymappings()
   imap <C-r>+  <Plug>Cygclip_insert
   cmap <C-r>+  <Plug>Cygclip_insert
 endfunction
+
+
+if !exists('g:cygclip_no_default_key_mappings')
+  call Cygclip_DefaultKeymappings()
+endif
 
 
 

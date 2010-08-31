@@ -3,4 +3,4 @@ current_branch := master
 origin_name := origin
 origin_uri := ../.
 repos_name := vim-fakeclip
-version := 0.2.7
+version := 0.2.8

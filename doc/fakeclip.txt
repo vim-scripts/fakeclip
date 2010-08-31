@@ -1,6 +1,6 @@
 *fakeclip.txt*	pseudo clipboard register for non-GUI version of Vim
 
-Version 0.2.7
+Version 0.2.8
 Script ID: 2098
 Copyright (C) 2007-2010 kana <http://whileimautomaton.net/>
 License: So-called MIT/X license  {{{
@@ -38,16 +38,17 @@ Changelog		|fakeclip-changelog|
 ==============================================================================
 INTRODUCTION					*fakeclip-introduction*
 
-*fakeclip* is a Vim plugin to provide pseudo clipboard register (|quotestar|
-or |quoteplus|) for non-GUI version of Vim on the following platforms:
+*fakeclip* is a Vim plugin to provide a pseudo |clipboard| register for
+several versions of Vim without |+clipboard| support, especially for non-GUI
+version of Vim on the following platforms:
 
 - Cygwin
 - Mac OS X
 - X Window System (by xclip <http://sourceforge.net/projects/xclip/>)
 
 
-fakeclip also provides a pseudo register for "paste buffer" if one of the
-following applications is available:
+fakeclip also provides a pseudo register to access a "paste buffer" if one of
+the following applications is available:
 
 - GNU screen
 - tmux
@@ -55,6 +56,9 @@ following applications is available:
 
 FAQ: If you can't copy/paste multibyte characters with the clipboard
      on Mac OS X, see |fakeclip-multibyte-on-mac|.
+
+Note for Mac OS users: Though Vim supports clipboard for the console version
+since version 7.3, fakeclip is still useful to access a "paste buffer".
 
 
 Requirements:
@@ -241,6 +245,9 @@ http://developer.apple.com/documentation/CoreFoundation/Reference/CFStringRef/
 
 ==============================================================================
 CHANGELOG					*fakeclip-changelog*
+
+0.2.8	2010-08-31T20:19:51+09:00		*fakeclip-changelog-0.2.8*
+	- |:FakeclipDefaultKeyMappings|: Fix to regard a given bang.
 
 0.2.7	2010-04-02T21:27:16+09:00		*fakeclip-changelog-0.2.7*
 	- Fix to read/write the paste buffer of GNU screen outside a session.

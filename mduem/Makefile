@@ -56,7 +56,10 @@
 
 # Common  #{{{1
 
-all: # Ensure that this is the default target.
+# Use "all" as the default target if no targets were specified on the command
+# line or any other rules were defined before including this Makefile.
+.DEFAULT_GOAL := all
+all:
 
 SHELL := /bin/bash
 this_makefile := $(lastword $(MAKEFILE_LIST))
@@ -185,7 +188,7 @@ DEP_vim_vspec_URI ?= ../vim-vspec
 DEP_vim_vspec_VERSION ?= 0.0.3
 
 DEP_vimup_URI ?= ../vimup
-DEP_vimup_VERSION ?= 0.0.0a3
+DEP_vimup_VERSION ?= 0.0.1
 
 
 	# BUGS: This resolves "../" just once, but it's enough for usual cases.
@@ -253,10 +256,9 @@ install: $(2)
 $(2): $(1)
 	@echo 'INSTALL $(1)'
 	@mkdir -p '$(dir $(2))'
-ifneq '$(call SHOULD_INSTALL_ASIS_P,$(1))' ''
-	@cp '$(1)' '$(2)'
-else
-	@sed -e 's/0.2.8/$(version)/' '$(1)' >'$(2)'
+	@cp '--preserve=mode,ownership' '$(1)' '$(2)'
+ifeq '$(call SHOULD_INSTALL_ASIS_P,$(1))' ''
+	@sed -i -e 's/0.2.9/$(version)/' '$(2)'
 endif
 
 endef
@@ -366,27 +368,30 @@ test_cases := $(patsubst test/%.expected,%, \
 
 default_test_rule_deps := $(MAKEFILE_LIST)
 define default_test_rule
-	@source './$<' &>'$@' || { cat '$@'; false; }
+	source './$<' &>'$@' || { cat '$@'; false; }
 endef
 
 ifneq '$(vim_script_repos_p)' ''
 all_vim_scripts := $(filter %.vim,$(all_files_in_repos))
 vim_script_test_rule_deps := .mduem/deps/vim-vspec/bin/vspec $(all_vim_scripts)
 define vim_script_test_rule
-	@./$(call get_dep_dir,vim-vspec)/bin/vspec \
-	   $< \
-	   "$$PWD" \
-	   $(foreach d,$(all_deps),$(call get_dep_dir,$(d))) \
-	   &>$@
+	./$(call get_dep_dir,vim-vspec)/bin/vspec \
+	  $< \
+	  "$$PWD" \
+	  $(foreach d,$(all_deps),$(call get_dep_dir,$(d))) \
+	  &>$@
 endef
 endif
 
 TEST_RULE ?= $(if $(vim_script_repos_p), \
                $(vim_script_test_rule), \
                $(default_test_rule))
-TEST_RULE_DEPS ?= $(if $(vim_script_repos_p), \
-                    $(vim_script_test_rule_deps), \
-                    $(default_test_rule_deps))
+TEST_RULE_DEPS ?=# Empty
+
+builtin_test_rule_deps := $(if $(vim_script_repos_p), \
+                            $(vim_script_test_rule_deps), \
+                            $(default_test_rule_deps))
+all_test_rule_deps := $(builtin_test_rule_deps) $(TEST_RULE_DEPS)
 
 
 
@@ -398,7 +403,7 @@ test/,ok: $(test_cases:%=test/,%.ok)
 	@echo 'ALL TESTS ARE PASSED.'
 	@touch $@
 
-test/,%.ok: test/%.input $(TEST_RULE_DEPS)
+test/,%.ok: test/%.input $(all_test_rule_deps)
 	@echo -n 'TEST $* ... '
 	@$(MAKE) --silent '$(@:.ok=.diff)'
 	@if ! [ -s $(@:.ok=.diff) ]; then \
@@ -414,8 +419,8 @@ test/,%.ok: test/%.input $(TEST_RULE_DEPS)
 test/,%.diff: test/%.expected test/,%.output
 	@diff -u $^ >$@; true
 
-test/,%.output: test/%.input $(TEST_RULE_DEPS)
-	$(TEST_RULE)
+test/,%.output: test/%.input $(all_test_rule_deps)
+	@$(TEST_RULE)
 
 
 

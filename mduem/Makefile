@@ -258,7 +258,7 @@ $(2): $(1)
 	@mkdir -p '$(dir $(2))'
 	@cp '--preserve=mode,ownership' '$(1)' '$(2)'
 ifeq '$(call SHOULD_INSTALL_ASIS_P,$(1))' ''
-	@sed -i -e 's/0.2.9/$(version)/' '$(2)'
+	@sed -i -e 's/0.2.10/$(version)/' '$(2)'
 endif
 
 endef
